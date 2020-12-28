@@ -47,11 +47,12 @@ if not Config.UseDeferrals then
 		TriggerEvent('esx_skin:resetFirstSpawn')
 
 		if not isDead then
-			EnableGui(true)
+			--EnableGui(true)
+			TriggerEvent('cui_character:open', { 'identity', 'features', 'style', 'apparel' }, false)
 		end
 	end)
 
-	RegisterNUICallback('register', function(data, cb)
+	--[[RegisterNUICallback('register', function(data, cb)
 		ESX.TriggerServerCallback('esx_identity:registerIdentity', function(callback)
 			if callback then
 				ESX.ShowNotification(_U('thank_you_for_registering'))
@@ -62,6 +63,18 @@ if not Config.UseDeferrals then
 			end
 		end, data)
 	end)
+]]--
+		RegisterNUICallback('register', function(data, cb)
+			ESX.TriggerServerCallback('cui_character:updateIdentity', function(callback)
+				if callback then
+					ESX.ShowNotification(_U('thank_you_for_registering'))
+					TriggerEvent('cui_character:setCurrentIdentity', data)
+					TriggerEvent('cui_character:close', true)
+				else
+					ESX.ShowNotification(_U('registration_error'))
+				end
+			end, data)
+		end)
 
 	Citizen.CreateThread(function()
 		while true do
